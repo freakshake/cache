@@ -6,8 +6,9 @@ import (
 	"net"
 	"time"
 
-	"github.com/freakshake/cache"
 	"github.com/go-redis/redis/v8"
+
+	"github.com/freakshake/cache"
 )
 
 type redisCache struct {
@@ -82,6 +83,17 @@ func (r *redisCache) Expire(ctx context.Context, k cache.Key, d time.Duration) e
 
 	if !v {
 		return cache.ErrKeyNotFound
+	}
+
+	return nil
+}
+
+func (r *redisCache) Ping() error {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	if _, err := r.client.Ping(ctx).Result(); err != nil {
+		return err
 	}
 
 	return nil

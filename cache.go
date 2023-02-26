@@ -14,4 +14,5 @@ type Cache interface {
 	Delete(context.Context, Key) error
 	Exist(context.Context, Key) (bool, error)
 	Expire(context.Context, Key, time.Duration) error
+	Ping() error
 }
